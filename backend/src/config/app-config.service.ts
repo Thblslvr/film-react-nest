@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-export type DatabaseDriver = 'mongodb';
+export type DatabaseDriver = 'mongodb' | 'memory';
 
 @Injectable()
 export class AppConfigService {
@@ -13,7 +13,7 @@ export class AppConfigService {
 
   get databaseDriver(): DatabaseDriver {
     return (this.config.get<string>('DATABASE_DRIVER') ??
-      'mongodb') as DatabaseDriver;
+      'memory') as DatabaseDriver;
   }
 
   get mongoUri(): string {

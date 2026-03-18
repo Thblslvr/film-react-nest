@@ -11,6 +11,13 @@ import { FilmDto } from '../films/dto/film.dto';
 import { ScheduleDto } from '../films/dto/schedule.dto';
 
 function toFilmDto(doc: Film): FilmDto {
+  const normalizeAssetPath = (p: string): string => {
+    if (!p) return p;
+    if (p.startsWith('/content/afisha/')) return p;
+    if (p.startsWith('/')) return `/content/afisha${p}`;
+    return p;
+  };
+
   return {
     id: doc.id,
     rating: doc.rating,
@@ -19,8 +26,8 @@ function toFilmDto(doc: Film): FilmDto {
     title: doc.title,
     about: doc.about,
     description: doc.description,
-    image: doc.image,
-    cover: doc.cover,
+    image: normalizeAssetPath(doc.image),
+    cover: normalizeAssetPath(doc.cover),
   };
 }
 
@@ -33,7 +40,7 @@ function toScheduleDto(session: Film['schedule'][number]): ScheduleDto {
   return {
     id: session.id,
     daytime: daytime.toISOString(),
-    hall: session.hall,
+    hall: Number(session.hall),
     rows: session.rows,
     seats: session.seats,
     price: session.price,
@@ -76,8 +83,8 @@ export class MongoFilmsRepository implements FilmsRepository {
     if (session.taken.includes(params.seatKey)) {
       throw new BadRequestException({ error: 'Seat already taken' });
     }
-    session.taken.push(params.seatKey);
 
+    session.taken.push(params.seatKey);
     await film.save();
   }
 }

@@ -21,4 +21,13 @@ export class FilmsController {
     const items = await this.filmsService.getFilmSchedule(id);
     return { total: items.length, items };
   }
+
+  // Support Postman collection typo (`shedule`)
+  @Get(':id/shedule')
+  async getFilmShedule(
+    @Param('id') id: string,
+  ): Promise<ListResponseDto<ScheduleDto>> {
+    const items = await this.filmsService.getFilmSchedule(id);
+    return { total: items.length, items };
+  }
 }

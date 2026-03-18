@@ -5,7 +5,7 @@ import { OrderService } from './order.service';
 import { OrderRepository } from '../repository/order.repository';
 
 @Module({
-  imports: [FilmsModule],
+  imports: [FilmsModule.forRoot()],
   controllers: [OrderController],
   providers: [OrderService, OrderRepository],
 })

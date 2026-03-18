@@ -26,13 +26,13 @@ export class FilmsSeedService implements OnApplicationBootstrap {
           'Документальный фильм, исследующий влияние искусственного интеллекта на общество и этические, философские и социальные последствия технологии.',
         description:
           'Документальный фильм Итана Райта исследует влияние технологий на современное общество, уделяя особое внимание роли искусственного интеллекта в формировании нашего будущего.',
-        image: '/content/afisha/',
-        cover: '/content/afisha/',
+        image: '/content/afisha/image.jpg',
+        cover: '/content/afisha/cover.jpg',
         schedule: [
           {
             id: '95ab4a20-9555-4a06-bfac-184b8c53fe70',
             daytime: new Date(Date.now() + 60 * 60 * 1000),
-            hall: '2',
+            hall: 2,
             rows: 5,
             seats: 10,
             price: 350,
@@ -45,4 +45,3 @@ export class FilmsSeedService implements OnApplicationBootstrap {
     this.logger.log('Seeded films collection with default data.');
   }
 }
-

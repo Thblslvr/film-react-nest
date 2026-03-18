@@ -23,7 +23,14 @@ export class OrderService {
     const results: OrderResultTicketDto[] = [];
 
     for (const ticket of dto.tickets) {
-      if (!ticket.film || !ticket.session || !ticket.row || !ticket.seat) {
+      if (
+        !ticket?.film ||
+        !ticket?.session ||
+        ticket?.row === undefined ||
+        ticket?.row === null ||
+        ticket?.seat === undefined ||
+        ticket?.seat === null
+      ) {
         throw new BadRequestException({ error: 'Invalid ticket' });
       }
 
