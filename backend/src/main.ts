@@ -4,7 +4,9 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/afisha');
+  app.setGlobalPrefix('api/afisha', {
+    exclude: ['content/afisha', 'content/afisha/(.*)'],
+  });
   app.enableCors();
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT') ?? 3000;

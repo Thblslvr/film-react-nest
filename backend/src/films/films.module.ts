@@ -5,6 +5,7 @@ import { FilmsService } from './films.service';
 import { Film, FilmSchema } from './schemas/film.schema';
 import { FILMS_REPOSITORY } from '../repository/films.repository';
 import { MongoFilmsRepository } from '../repository/mongo-films.repository';
+import { FilmsSeedService } from './films.seed';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MongoFilmsRepository } from '../repository/mongo-films.repository';
   controllers: [FilmsController],
   providers: [
     FilmsService,
+    FilmsSeedService,
     MongoFilmsRepository,
     {
       provide: FILMS_REPOSITORY,

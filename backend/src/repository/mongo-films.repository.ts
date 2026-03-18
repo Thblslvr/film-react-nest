@@ -25,9 +25,14 @@ function toFilmDto(doc: Film): FilmDto {
 }
 
 function toScheduleDto(session: Film['schedule'][number]): ScheduleDto {
+  const daytime =
+    session.daytime instanceof Date
+      ? session.daytime
+      : new Date(session.daytime as unknown as string);
+
   return {
     id: session.id,
-    daytime: session.daytime.toISOString(),
+    daytime: daytime.toISOString(),
     hall: session.hall,
     rows: session.rows,
     seats: session.seats,
