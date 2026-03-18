@@ -1,1 +1,4 @@
-//TODO описать DTO для запросов к /films
+export class ListResponseDto<TItem> {
+  total!: number;
+  items!: TItem[];
+}
