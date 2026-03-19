@@ -1,9 +1,7 @@
+// order.service.ts
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateOrderDto, OrderResultTicketDto } from './dto/order.dto';
-import {
-  FILMS_REPOSITORY,
-  FilmsRepository,
-} from '../repository/films.repository';
+import { CreateOrderDto, OrderResultTicketDto, TicketDto } from './dto/order.dto';
+import { FILMS_REPOSITORY, FilmsRepository } from '../repository/films.repository';
 import { OrderRepository } from '../repository/order.repository';
 import { randomUUID } from 'node:crypto';
 
@@ -14,22 +12,19 @@ export class OrderService {
     private readonly orderRepo: OrderRepository,
   ) {}
 
-  async createOrder(dto: CreateOrderDto): Promise<OrderResultTicketDto[]> {
-    if (!dto?.tickets?.length) {
+  async createOrder(tickets: CreateOrderDto): Promise<OrderResultTicketDto[]> {
+    if (!tickets?.length) {
       throw new BadRequestException({ error: 'Tickets are required' });
     }
 
-    // Сначала валидируем/бронируем места последовательно, чтобы не получить частично выполненный заказ.
     const results: OrderResultTicketDto[] = [];
 
-    for (const ticket of dto.tickets) {
+    for (const ticket of tickets) {
       if (
-        !ticket?.film ||
-        !ticket?.session ||
-        ticket?.row === undefined ||
-        ticket?.row === null ||
-        ticket?.seat === undefined ||
-        ticket?.seat === null
+        !ticket.film ||
+        !ticket.session ||
+        ticket.row === undefined ||
+        ticket.seat === undefined
       ) {
         throw new BadRequestException({ error: 'Invalid ticket' });
       }
@@ -47,7 +42,7 @@ export class OrderService {
       });
     }
 
-    this.orderRepo.save(dto, results);
+    this.orderRepo.save(tickets, results);
     return results;
   }
 }

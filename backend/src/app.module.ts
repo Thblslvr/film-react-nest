@@ -21,7 +21,7 @@ import { StaticSeedService } from './static/static.seed';
     AppConfigModule,
     DatabaseModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: path.join(process.cwd(), 'public'),
+      rootPath: path.join(process.cwd(), 'public', 'content', 'afisha'),
       serveRoot: '/content/afisha',
     }),
     FilmsModule.forRoot(),

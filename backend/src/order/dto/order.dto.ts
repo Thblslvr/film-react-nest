@@ -1,3 +1,4 @@
+// order.dto.ts
 export class TicketDto {
   film!: string;
   session!: string;
@@ -7,11 +8,8 @@ export class TicketDto {
   price!: number;
 }
 
-export class CreateOrderDto {
-  email!: string;
-  phone!: string;
-  tickets!: TicketDto[];
-}
+// Тело запроса — массив билетов
+export type CreateOrderDto = TicketDto[];
 
 export class OrderResultTicketDto extends TicketDto {
   id!: string;
@@ -21,5 +19,3 @@ export class ListResponseDto<TItem> {
   total!: number;
   items!: TItem[];
 }
-
-//TODO реализовать DTO для /orders
