@@ -1,33 +1,28 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilmsController } from './films.controller';
 import { FilmsService } from './films.service';
-import { Film, FilmSchema } from './schemas/film.schema';
+import { Film } from '../entities/film.entity';
+import { Schedule } from '../entities/schedule.entity';
 import { FILMS_REPOSITORY } from '../repository/films.repository';
-import { MongoFilmsRepository } from '../repository/mongo-films.repository';
-import { FilmsSeedService } from './films.seed';
-import { MemoryFilmsRepository } from '../repository/memory-films.repository';
+import { TypeormFilmsRepository } from '../repository/typeorm-films.repository';
 
 @Module({})
 export class FilmsModule {
   static forRoot(): DynamicModule {
-    const driver = (process.env.DATABASE_DRIVER ?? 'memory').toLowerCase();
-
-    const isMongo = driver === 'mongodb';
+    const driver = process.env.DATABASE_DRIVER?.toLowerCase();
+    const isPostgres = driver === 'postgres';
 
     return {
       module: FilmsModule,
-      imports: isMongo
-        ? [MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }])]
-        : [],
+      imports: isPostgres ? [TypeOrmModule.forFeature([Film, Schedule])] : [],
       controllers: [FilmsController],
       providers: [
         FilmsService,
-        ...(isMongo ? [FilmsSeedService, MongoFilmsRepository] : []),
-        ...(!isMongo ? [MemoryFilmsRepository] : []),
+        ...(isPostgres ? [TypeormFilmsRepository] : []),
         {
           provide: FILMS_REPOSITORY,
-          useExisting: isMongo ? MongoFilmsRepository : MemoryFilmsRepository,
+          useExisting: isPostgres ? TypeormFilmsRepository : undefined,
         },
       ],
       exports: [FILMS_REPOSITORY],

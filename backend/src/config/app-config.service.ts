@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-export type DatabaseDriver = 'mongodb' | 'memory';
+export type DatabaseDriver = 'postgres' | 'memory';
 
 @Injectable()
 export class AppConfigService {
@@ -14,13 +14,5 @@ export class AppConfigService {
   get databaseDriver(): DatabaseDriver {
     return (this.config.get<string>('DATABASE_DRIVER') ??
       'memory') as DatabaseDriver;
-  }
-
-  get mongoUri(): string {
-    return (
-      this.config.get<string>('MONGODB_URI') ??
-      this.config.get<string>('DATABASE_URL') ??
-      'mongodb://127.0.0.1:27017/afisha'
-    );
   }
 }

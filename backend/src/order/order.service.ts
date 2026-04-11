@@ -1,7 +1,10 @@
 // order.service.ts
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateOrderDto, OrderResultTicketDto, TicketDto } from './dto/order.dto';
-import { FILMS_REPOSITORY, FilmsRepository } from '../repository/films.repository';
+import { CreateOrderDto, OrderResultTicketDto } from './dto/order.dto';
+import {
+  FILMS_REPOSITORY,
+  FilmsRepository,
+} from '../repository/films.repository';
 import { OrderRepository } from '../repository/order.repository';
 import { randomUUID } from 'node:crypto';
 

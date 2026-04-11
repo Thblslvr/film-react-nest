@@ -1,26 +1,36 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Film } from '../entities/film.entity';
+import { Schedule } from '../entities/schedule.entity';
 
 @Module({})
 export class DatabaseModule {
   static forRoot(): DynamicModule {
-    const driver = (process.env.DATABASE_DRIVER ?? 'memory').toLowerCase();
     return {
       module: DatabaseModule,
-      imports:
-        driver === 'mongodb'
-          ? [
-              MongooseModule.forRoot(
-                process.env.MONGODB_URI ??
-                  process.env.DATABASE_URL ??
-                  'mongodb://127.0.0.1:27017/afisha',
-                {
-                  serverSelectionTimeoutMS: 2000,
-                  connectTimeoutMS: 2000,
-                },
-              ),
-            ]
-          : [],
+      imports: [
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => {
+            const driver = configService.get<string>('DATABASE_DRIVER');
+            if (driver !== 'postgres') {
+              // Если не postgres, не подключаем TypeORM (например, для тестов)
+              return {};
+            }
+            return {
+              type: 'postgres',
+              url: configService.get<string>('DATABASE_URL'),
+              username: configService.get<string>('DATABASE_USERNAME'),
+              password: configService.get<string>('DATABASE_PASSWORD'),
+              entities: [Film, Schedule],
+              synchronize: false, // В production — false, используйте миграции
+              logging: false,
+            };
+          },
+        }),
+      ],
     };
   }
 }
