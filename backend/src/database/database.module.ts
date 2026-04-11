@@ -24,8 +24,8 @@ export class DatabaseModule {
               url: configService.get<string>('DATABASE_URL'),
               username: configService.get<string>('DATABASE_USERNAME'),
               password: configService.get<string>('DATABASE_PASSWORD'),
-              entities: [Film, Schedule],
-              synchronize: false, // В production — false, используйте миграции
+              entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+              synchronize: process.env.NODE_ENV !== 'production',
               logging: false,
             };
           },
