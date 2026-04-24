@@ -38,19 +38,18 @@ services:
       - film-network
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: ghcr.io/thblslvr/film-frontend:local
-    container_name: film-frontend
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - film-network
-
+  build:
+    context: .                    # корень проекта (где лежит папка nginx)
+    dockerfile: ./frontend/Dockerfile
+  image: ghcr.io/thblslvr/film-frontend:local
+  container_name: film-frontend
+  restart: unless-stopped
+  ports:
+    - "80:80"
+  depends_on:
+    - backend
+  networks:
+    - film-network
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: film-pgadmin
