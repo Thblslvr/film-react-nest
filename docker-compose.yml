@@ -23,7 +23,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/film-backend:latest
+    image: ghcr.io/Thblslvr/film-backend:latest
     container_name: film-backend
     restart: unless-stopped
     environment:
