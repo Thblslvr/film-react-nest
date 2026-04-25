@@ -1,4 +1,3 @@
-// order.controller.ts
 import { Body, Controller, Post } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
@@ -15,7 +14,7 @@ export class OrderController {
   async createOrder(
     @Body() dto: CreateOrderDto,
   ): Promise<ListResponseDto<OrderResultTicketDto>> {
-    const items = await this.orderService.createOrder(dto);
+    const items = await this.orderService.createOrder(dto.tickets);
     return { total: items.length, items };
   }
 }

@@ -1,8 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Film } from '../entities/film.entity';
-import { Schedule } from '../entities/schedule.entity';
 
 @Module({})
 export class DatabaseModule {

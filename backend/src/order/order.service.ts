@@ -1,6 +1,5 @@
-// order.service.ts
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateOrderDto, OrderResultTicketDto } from './dto/order.dto';
+import { TicketDto, OrderResultTicketDto } from './dto/order.dto';
 import {
   FILMS_REPOSITORY,
   FilmsRepository,
@@ -15,7 +14,7 @@ export class OrderService {
     private readonly orderRepo: OrderRepository,
   ) {}
 
-  async createOrder(tickets: CreateOrderDto): Promise<OrderResultTicketDto[]> {
+  async createOrder(tickets: TicketDto[]): Promise<OrderResultTicketDto[]> {
     if (!tickets?.length) {
       throw new BadRequestException({ error: 'Tickets are required' });
     }
