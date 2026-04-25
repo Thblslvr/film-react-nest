@@ -43,7 +43,9 @@ describe('TskvLogger', () => {
       const parsed = parseTskvOutput(output);
       expect(parsed.level).toBe('log');
       expect(parsed.message).toBe(message);
-      expect(parsed.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(parsed.timestamp).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+      );
     });
 
     it('should include context when optional parameters provided', () => {

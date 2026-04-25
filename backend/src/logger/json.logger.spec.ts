@@ -34,7 +34,9 @@ describe('JsonLogger', () => {
       const parsed = parseJsonOutput(consoleLogSpy);
       expect(parsed.level).toBe('log');
       expect(parsed.message).toBe(message);
-      expect(parsed.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(parsed.timestamp).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
+      );
     });
 
     it('should include optional parameters as context field', () => {

@@ -4,7 +4,7 @@ import { OrderService } from './order.service';
 import {
   CreateOrderDto,
   OrderResultTicketDto,
-  ListResponseDto,
+  TicketDto,
 } from './dto/order.dto';
 import { BadRequestException } from '@nestjs/common';
 
@@ -16,7 +16,7 @@ describe('OrderController', () => {
     createOrder: jest.fn(),
   };
 
-  const mockTicket: CreateOrderDto[0] = {
+  const mockTicket: TicketDto = {
     film: 'd290f1ee-6c54-4b01-90e6-d701748f0851',
     session: '95ab4a20-9555-4a06-bfac-184b8c53fe70',
     daytime: '2023-05-29T10:30:00.001Z',
@@ -51,28 +51,32 @@ describe('OrderController', () => {
 
   describe('createOrder', () => {
     it('should successfully create order and return tickets with IDs', async () => {
-      const tickets: CreateOrderDto = [mockTicket];
+      const dto: CreateOrderDto = {
+        email: 'test@test.ru',
+        phone: '+7 000 000-00-00',
+        tickets: [mockTicket],
+      };
       const expectedResult: OrderResultTicketDto[] = [mockResultTicket];
       mockOrderService.createOrder.mockResolvedValue(expectedResult);
 
-      const result = await controller.createOrder(tickets);
-      const expectedResponse: ListResponseDto<OrderResultTicketDto> = {
+      const result = await controller.createOrder(dto);
+      expect(result).toEqual({
         total: expectedResult.length,
         items: expectedResult,
-      };
-      expect(result).toEqual(expectedResponse);
-      expect(orderService.createOrder).toHaveBeenCalledWith(tickets);
+      });
+      expect(orderService.createOrder).toHaveBeenCalledWith(dto.tickets);
     });
 
     it('should handle multiple tickets', async () => {
-      const tickets: CreateOrderDto = [mockTicket, { ...mockTicket, seat: 6 }];
+      const tickets: TicketDto[] = [mockTicket, { ...mockTicket, seat: 6 }];
+      const dto: CreateOrderDto = { tickets };
       const results: OrderResultTicketDto[] = [
         { ...mockTicket, id: 'uuid-1' },
         { ...mockTicket, seat: 6, id: 'uuid-2' },
       ];
       mockOrderService.createOrder.mockResolvedValue(results);
 
-      const response = await controller.createOrder(tickets);
+      const response = await controller.createOrder(dto);
       expect(response.total).toBe(2);
       expect(response.items).toHaveLength(2);
       expect(response.items[0].id).toBeDefined();
@@ -83,27 +87,27 @@ describe('OrderController', () => {
       const error = new BadRequestException({ error: 'Seat already taken' });
       mockOrderService.createOrder.mockRejectedValue(error);
 
-      await expect(controller.createOrder([mockTicket])).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        controller.createOrder({ tickets: [mockTicket] }),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should propagate errors when no tickets provided (service validation)', async () => {
       const error = new BadRequestException({ error: 'Tickets are required' });
       mockOrderService.createOrder.mockRejectedValue(error);
 
-      await expect(controller.createOrder([])).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        controller.createOrder({ tickets: [] }),
+      ).rejects.toThrow(BadRequestException);
       expect(orderService.createOrder).toHaveBeenCalledWith([]);
     });
 
     it('should return correct ListResponseDto structure', async () => {
-      const tickets: CreateOrderDto = [mockTicket];
+      const dto: CreateOrderDto = { tickets: [mockTicket] };
       const results = [mockResultTicket];
       mockOrderService.createOrder.mockResolvedValue(results);
 
-      const response = await controller.createOrder(tickets);
+      const response = await controller.createOrder(dto);
       expect(response).toHaveProperty('total');
       expect(response).toHaveProperty('items');
       expect(Array.isArray(response.items)).toBe(true);

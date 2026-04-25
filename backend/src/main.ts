@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { RequestMethod, LoggerService } from '@nestjs/common';  // ← импортируем LoggerService
+import { RequestMethod, LoggerService } from '@nestjs/common'; // ← импортируем LoggerService
 import { DevLogger } from './logger/dev.logger';
 import { JsonLogger } from './logger/json.logger';
 import { TskvLogger } from './logger/tskv.logger';
@@ -21,7 +21,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logFormat = configService.get<string>('LOG_FORMAT') ?? 'dev';
 
-  let logger: LoggerService; 
+  let logger: LoggerService;
   switch (logFormat) {
     case 'json':
       logger = new JsonLogger();

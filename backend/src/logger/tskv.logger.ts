@@ -4,7 +4,9 @@ import { LoggerService, Injectable } from '@nestjs/common';
 export class TskvLogger implements LoggerService {
   private formatMessage(level: string, message: any, ...optionalParams: any[]) {
     const timestamp = new Date().toISOString();
-    const parts = [`tskv\ttimestamp=${timestamp}\tlevel=${level}\tmessage=${message}`];
+    const parts = [
+      `tskv\ttimestamp=${timestamp}\tlevel=${level}\tmessage=${message}`,
+    ];
     if (optionalParams.length) {
       parts.push(`context=${optionalParams.join(', ')}`);
     }
